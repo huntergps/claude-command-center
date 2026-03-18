@@ -38,6 +38,7 @@ export function useServerEvents() {
     addChatMessage,
     addNotification,
     addActivity,
+    addClaudeHookEvent,
   } = useMissionControl()
 
   useEffect(() => {
@@ -165,6 +166,19 @@ export function useServerEvents() {
           }
           break
 
+        // Claude Hook events
+        case 'claude.hook':
+          if (event.data) {
+            addClaudeHookEvent({
+              session_id: event.data.session_id || '',
+              event_type: event.data.type || event.data.event_type || '',
+              tool_name: event.data.tool || event.data.tool_name,
+              agent_name: event.data.agent || event.data.agent_name,
+              timestamp: event.timestamp,
+            })
+          }
+          break
+
         // Activity events
         case 'activity.created':
           if (event.data?.id) {
@@ -204,5 +218,6 @@ export function useServerEvents() {
     addChatMessage,
     addNotification,
     addActivity,
+    addClaudeHookEvent,
   ])
 }

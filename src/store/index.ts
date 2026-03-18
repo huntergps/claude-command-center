@@ -569,6 +569,11 @@ interface MissionControlStore {
   memoryGraphAgents: { name: string; dbSize: number; totalChunks: number; totalFiles: number; files: { path: string; chunks: number; textSize: number }[] }[] | null
   setMemoryGraphAgents: (agents: { name: string; dbSize: number; totalChunks: number; totalFiles: number; files: { path: string; chunks: number; textSize: number }[] }[]) => void
 
+  // Claude Hook Events (real-time from hooks)
+  claudeHookEvents: { session_id: string; event_type: string; tool_name?: string; agent_name?: string; timestamp: number }[]
+  addClaudeHookEvent: (event: { session_id: string; event_type: string; tool_name?: string; agent_name?: string; timestamp: number }) => void
+  clearClaudeHookEvents: () => void
+
   // Security Posture
   securityPosture?: { score: number; level: string }
   setSecurityPosture: (posture: { score: number; level: string } | undefined) => void
@@ -902,6 +907,13 @@ export const useMissionControl = create<MissionControlStore>()(
     setMemoryGraphAgents: (agents) => set({ memoryGraphAgents: agents }),
 
     // Security Posture
+    // Claude Hook Events
+    claudeHookEvents: [],
+    addClaudeHookEvent: (event) => set((state) => ({
+      claudeHookEvents: [...state.claudeHookEvents.slice(-99), event],
+    })),
+    clearClaudeHookEvents: () => set({ claudeHookEvents: [] }),
+
     securityPosture: undefined,
     setSecurityPosture: (posture) => set({ securityPosture: posture }),
 

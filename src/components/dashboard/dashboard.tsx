@@ -7,6 +7,7 @@ import { useSmartPoll } from '@/lib/use-smart-poll'
 import { SignalPill, getLocalOsStatus, getProviderHealth, getMcHealth } from './widget-primitives'
 import { OnboardingChecklistWidget } from './widgets/onboarding-checklist-widget'
 import { WidgetGrid } from './widget-grid'
+import { ClawEmpireHeader } from './claw-empire-header'
 import type { DbStats, ClaudeStats, LogLike, DashboardData } from './widget-primitives'
 
 export function Dashboard() {
@@ -263,27 +264,7 @@ export function Dashboard() {
   return (
     <div className="p-5 space-y-4">
       <OnboardingChecklistWidget />
-      <section className="rounded-xl border border-border bg-card p-4">
-        <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <div className="text-2xs uppercase tracking-[0.12em] text-muted-foreground">Overview</div>
-            <h2 className="text-lg font-semibold text-foreground">
-              {isLocal ? 'Local Agent Runtime' : 'Gateway Control Plane'}
-            </h2>
-            <p className="text-xs text-muted-foreground">
-              {isLocal
-                ? 'Unified visibility for Claude, Codex & Hermes local sessions, host pressure, and operator continuity.'
-                : 'Gateway-first health, session routing, queue pressure, and incident response signals.'}
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-2 min-w-[280px]">
-            <SignalPill label="Mode" value={isLocal ? 'Local' : 'Gateway'} tone="info" />
-            <SignalPill label="Events" value={`${mergedRecentLogs.length} stream`} tone={recentErrorLogs > 0 ? 'warning' : 'success'} />
-            <SignalPill label="Queue" value={String(backlogCount)} tone={backlogCount > 10 ? 'warning' : 'info'} />
-            <SignalPill label="Errors" value={String(errorCount)} tone={errorCount > 0 ? 'warning' : 'success'} />
-          </div>
-        </div>
-      </section>
+      <ClawEmpireHeader data={dashboardData} />
 
       <WidgetGrid data={dashboardData} />
     </div>

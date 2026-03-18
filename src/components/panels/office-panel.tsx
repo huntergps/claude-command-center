@@ -8,8 +8,9 @@ import { Button } from '@/components/ui/button'
 import { Loader } from '@/components/ui/loader'
 import { useMissionControl, Agent } from '@/store'
 import { buildOfficeLayout } from '@/lib/office-layout'
+import { PixelOffice } from '@/components/pixel-office'
 
-type ViewMode = 'office' | 'org-chart'
+type ViewMode = 'office' | 'org-chart' | 'pixel-office'
 type OrgSegmentMode = 'category' | 'role' | 'status'
 
 interface SessionAgentRow {
@@ -1541,6 +1542,14 @@ export function OfficePanel() {
               >
                 {t('buttonCrewChart')}
               </Button>
+              <Button
+                variant={viewMode === 'pixel-office' ? 'default' : 'secondary'}
+                size="sm"
+                onClick={() => setViewMode('pixel-office')}
+                className="rounded-none"
+              >
+                Pixel Office
+              </Button>
             </div>
             <Button variant="secondary" size="sm" onClick={fetchAgents}>
               {t('refresh')}
@@ -1549,7 +1558,9 @@ export function OfficePanel() {
         </div>
       </div>
 
-      {visibleDisplayAgents.length === 0 ? (
+      {viewMode === 'pixel-office' ? (
+        <PixelOffice />
+      ) : visibleDisplayAgents.length === 0 ? (
         <div className="text-center py-16 text-muted-foreground">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="w-12 h-12 mx-auto mb-3 text-void-cyan/30">
             <path d="M8 1l6 4v6l-6 4-6-4V5l6-4z" />

@@ -1262,6 +1262,25 @@ const migrations: Migration[] = [
       db.exec(`CREATE INDEX IF NOT EXISTS idx_gateway_health_logs_gateway_id ON gateway_health_logs(gateway_id)`)
       db.exec(`CREATE INDEX IF NOT EXISTS idx_gateway_health_logs_probed_at ON gateway_health_logs(probed_at)`)
     }
+  },
+  {
+    id: '042_claude_hook_events',
+    up(db: Database.Database) {
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS claude_hook_events (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          session_id TEXT NOT NULL,
+          event_type TEXT NOT NULL CHECK(event_type IN ('session_start', 'session_end', 'tool_use', 'stop')),
+          tool_name TEXT DEFAULT '',
+          agent_name TEXT DEFAULT '',
+          payload TEXT DEFAULT '{}',
+          created_at INTEGER NOT NULL
+        )
+      `)
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_claude_hook_session ON claude_hook_events(session_id)`)
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_claude_hook_created ON claude_hook_events(created_at)`)
+      db.exec(`CREATE INDEX IF NOT EXISTS idx_claude_hook_event_type ON claude_hook_events(event_type)`)
+    }
   }
 ]
 

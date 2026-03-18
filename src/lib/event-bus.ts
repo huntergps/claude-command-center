@@ -32,6 +32,7 @@ export type EventType =
   | 'connection.created'
   | 'connection.disconnected'
   | 'github.synced'
+  | 'claude.hook'
 
 class ServerEventBus extends EventEmitter {
   private static instance: ServerEventBus | null = null
